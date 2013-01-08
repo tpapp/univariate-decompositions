@@ -10,7 +10,9 @@
 (cl:in-package #:univariate-decompositions)
 
 (defun deviations (function matrix-of-rows trend &optional (element-type t))
-  ""
+  "Decompose deviations from the trend.  The exact procedure is described in the README.  Function is f (mapping a vector to a scalar), the x's are in matrix-of-rows (a matrix), g calculates the trend (mapping a vector to a vector).  When ELEMENT-TYPE is given, the results of all interim calculations have to be subtypes of that (or arrays of that subtype).
+
+Return (values v w e)."
   (check-type matrix-of-rows (array * (* *)))
   (let+ ((vectors (ao:split matrix-of-rows 1))
          (trends (ao:each trend vectors))

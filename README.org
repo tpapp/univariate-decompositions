@@ -1,0 +1,15 @@
+* Description of the decomposition
+
+Let $x_{\cdot,t} \in \mathbb{R}^n$, $1 \leq t \leq T$, and $y_t = f(x_{\cdot,t})$ for all $t$, where $f: \mathbb{R}^n \mapsto \mathbb{R}$.  We would like to decompose the effects of each component of the $x$'s on $y$, as deviations from a trend.
+
+For this we need a trend function $g: \mathbb{R}^T \mapsto \mathbb{R}^T$ (which could be a simple mean, a linear trend, a HP filter, etc).
+
+Let $z_{\cdot,i} = g(x_{\cdot,i})$ the trend for each $i$.
+
+Let $v_t = y_t - f(z_t)$.  This is the /total/ deviation from the trend.
+
+Let $w_{i,t} = f(x_{i,t},z_{-i,t})-f(z_t)$.  This is the contribution of component $i$ at time $t$.
+
+Also, define $e_{t}$ implicitly by the equality $v_t = \sum_i x_{i,t} + e_t$.  This is the approximation error.
+
+The function =deviations= in the library implements this decomposition.
