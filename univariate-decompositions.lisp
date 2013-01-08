@@ -9,16 +9,15 @@
 
 (cl:in-package #:univariate-decompositions)
 
-(defun deviations (f x g &optional (element-type t))
+(defun deviations (function matrix-of-rows trend &optional (element-type t))
   ""
-  (declare (optimize debug))
-  (check-type x (array * (* *)))
-  (let+ ((vectors (ao:split x 1))
-         (trends (ao:each g vectors))
+  (check-type matrix-of-rows (array * (* *)))
+  (let+ ((vectors (ao:split matrix-of-rows 1))
+         (trends (ao:each trend vectors))
          ((&flet v- (vector1 vector2)
             (ao:each* element-type #'- vector1 vector2)))
          ((&flet f-on-vectors (vectors)
-            (ao:margin* element-type f (ao:combine vectors element-type) 0)))
+            (ao:margin* element-type function (ao:combine vectors element-type) 0)))
          (f-trend (f-on-vectors trends))
          ((&flet f-deviation (vectors)
             (v- (f-on-vectors vectors) f-trend)))
