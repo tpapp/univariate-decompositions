@@ -1,3 +1,5 @@
+#+OPTIONS: LaTeX:t
+
 * Description of the decomposition
 
 Let $x_{\cdot,t} \in \mathbb{R}^n$, $1 \leq t \leq T$, and $y_t = f(x_{\cdot,t})$ for all $t$, where $f: \mathbb{R}^n \mapsto \mathbb{R}$.  We would like to decompose the effects of each component of the $x$'s on $y$, as deviations from a trend.
