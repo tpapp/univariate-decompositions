@@ -3,7 +3,6 @@
 (cl:defpackage #:univariate-decompositions
   (:use #:cl
         #:alexandria
-        #:anaphora
         #:let-plus)
   (:export
    #:deviations))
