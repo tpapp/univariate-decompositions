@@ -38,8 +38,6 @@
 
 (cl:defpackage #:univariate-decompositions-tests
   (:use #:cl
-        #:alexandria
-        #:anaphora
         #:clunit
         #:let-plus)
   (:export
@@ -74,3 +72,15 @@
     (assert-equalp #(-19 0 27) lhs)
     (assert-equalp #2A((-3 0 3) (-16 0 24)) rhs)
     (assert-equalp #(0 0 0) rhs-error)))
+
+(deftest test2 (tests)
+  (let+ (((&flet g (vector)
+            (ao:recycle 2 :outer vector)))
+         ((&flet f (v)
+            (* (aref v 0) (aref v 1))))
+         ((&values lhs rhs rhs-error)
+          (univariate-decompositions:deviations #'f #2A((3) (5)) #'g)))
+    ;; extremely simple calculation, but with interactions (and thus error)
+    (assert-equalp #(11) lhs)
+    (assert-equalp #2A((2) (6)) rhs)
+    (assert-equalp #(3) rhs-error)))
