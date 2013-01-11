@@ -3,18 +3,22 @@
 (cl:defpackage #:univariate-decompositions
   (:use #:cl
         #:alexandria
+        #:anaphora
         #:let-plus)
   (:export
    #:deviations))
 
 (cl:in-package #:univariate-decompositions)
 
-(defun deviations (function matrix-of-rows trend &optional (element-type t))
-  "Decompose deviations from the trend.  The exact procedure is described in the README.  Function is f (mapping a vector to a scalar), the x's are in matrix-of-rows (a matrix), g calculates the trend (mapping a vector to a vector).  When ELEMENT-TYPE is given, the results of all interim calculations have to be subtypes of that (or arrays of that subtype).
+(defun deviations (function vectors trend &optional (element-type t))
+  "Decompose deviations from the trend.  The exact procedure is described in the README.  Function is f (mapping a vector to a scalar), the x's are in VECTORS (a sequence of vectors), g calculates the trend (mapping a vector to a vector).  When ELEMENT-TYPE is given, the results of all interim calculations have to be subtypes of that (or arrays of that subtype).
 
 Return (values v w e)."
-  (check-type matrix-of-rows (array * (* *)))
-  (let+ ((vectors (ao:split matrix-of-rows 1))
+  (let+ ((vectors (aprog1 (coerce vectors 'vector)
+                    (assert (plusp (length it)))
+                    (assert (every #'vectorp it))
+                    (assert (every (curry #'length= (length (aref it 0)))
+                                   (subseq it 1)))))
          (trends (ao:each trend vectors))
          ((&flet v- (vector1 vector2)
             (ao:each* element-type #'- vector1 vector2)))
@@ -59,7 +63,7 @@ Return (values v w e)."
          ((&flet f (v)
             (let+ ((#(v0 v1) v))
               (+ (* 3 v0) (expt v1 2)))))
-         (x (ao:combine (vector a b)))
+         (x (vector a b))
          ((&values lhs rhs rhs-error)
           (univariate-decompositions:deviations #'f x #'g)))
     ;; Calculations:
@@ -79,7 +83,7 @@ Return (values v w e)."
          ((&flet f (v)
             (* (aref v 0) (aref v 1))))
          ((&values lhs rhs rhs-error)
-          (univariate-decompositions:deviations #'f #2A((3) (5)) #'g)))
+          (univariate-decompositions:deviations #'f #(#(3) #(5)) #'g)))
     ;; extremely simple calculation, but with interactions (and thus error)
     (assert-equalp #(11) lhs)
     (assert-equalp #2A((2) (6)) rhs)

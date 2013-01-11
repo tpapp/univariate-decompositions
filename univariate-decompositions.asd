@@ -5,6 +5,7 @@
   :author "Tamas Papp <tkpapp@gmail.com>"
   :licence "BSD-style"
   :depends-on (#:alexandria
+               #:anaphora
                #:array-operations
                #:clunit
                #:let-plus)
